@@ -13,6 +13,10 @@ static int on_frame_header(websocket_parser* parser) {
         wp->opcode = opcode;
     }
     int length = parser->length;
+    //如果大于1m
+    if (length > 1024*1024) {
+        close();
+    }
     int reserve_length = MIN(length + 1, MAX_PAYLOAD_LENGTH);
     if (reserve_length > wp->message.capacity()) {
         wp->message.reserve(reserve_length);
